@@ -8,46 +8,37 @@ from pygame.sprite import *
 def main():
     pygame.init()
 
-    # Display
     size = width, height = 640, 480
-    screen = pygame.display.set_mode(size)
-    screen.fill((255, 255, 255))
-    pygame.display.set_caption('Hit the mole!')
-    pygame.mouse.set_cursor((8,8),(0,0),(0,0,0,0,0,0,0,0),(0,0,0,0,0,0,0,0))
-
+    run = True
+    hitted_the_mole = False
     score = 0
     black = (0, 0, 0)
     white = (255, 255, 255)
-
-    pygame.display.update()
-
-    collideSound = pygame.mixer.Sound('./sounds/collide.wav')
-
-    # Loop == ALTER
-    # Assign Values to key variables
-    keepGoing = True
     clock = pygame.time.Clock()
-
-    hitted_the_mole = False
-
+    screen = pygame.display.set_mode(size)
+    cursor_picture = pygame.image.load('./images/schaufel.png').convert_alpha()
+    collideSound = pygame.mixer.Sound('./sounds/collide.wav')
     mole = Mole()
-
     sprites = RenderPlain(mole)
     lastMovementOfTheMole = 0
+    font = pygame.font.SysFont(None, 25)
 
-    cursor_picture = pygame.image.load('./images/schaufel.png').convert_alpha()
+    # Display
+    screen.fill(white)
+    pygame.display.set_caption('Hit the mole!')
+
+    pygame.mouse.set_cursor((8,8),(0,0),(0,0,0,0,0,0,0,0),(0,0,0,0,0,0,0,0))
 
     # Loop
-    while keepGoing:
+    while run:
         # Timing
         clock.tick(30)
         actualTimeInSeconds = int(round(pygame.time.get_ticks()/1000))
 
         # Events
-        x, y = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                keepGoing = False
+                run = False
                 break
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if mole.rect.collidepoint(mouse.get_pos()) and not hitted_the_mole:
@@ -62,7 +53,6 @@ def main():
         sprites.draw(screen)
         screen.blit(cursor_picture, pygame.mouse.get_pos())
 
-        font = pygame.font.SysFont(None, 25)
         text = font.render("Score: " + str(score), True, black)
         screen.blit(text, (0, 0))
 
